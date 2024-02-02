@@ -4,21 +4,15 @@ const app = express();
 const port = 3000;
 
 app.get('/', async (req, res) => {
-    console.log(1);
-    const passwordToCheck = 'your_password_here';
+    const count = await checkPasswordLeaked('password');
 
-    checkPasswordLeaked(passwordToCheck)
-        .then((count) => {
-            if (count > 0) {
-                console.log(`The password has been leaked ${count} times. Consider choosing a different one.`);
-            } else if (count === 0) {
-                console.log('The password has not been leaked. It appears to be safe.');
-            } else {
-                console.log('Error checking the password.');
-            }
-        });
-
-    res.send(0);
+    if (count > 0) {
+        res.status(200).send(`The password has been leaked ${count} times. Consider choosing a different one.`);
+    } else if (count === 0) {
+        res.status(200).send('The password has not been leaked. It appears to be safe.');
+    } else {
+        res.status(500).send('Error checking the password.');
+    }
 });
 
 app.listen(port, () => {
