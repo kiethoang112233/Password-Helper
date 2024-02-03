@@ -60,7 +60,6 @@ userSchema.pre("save", async function (next) {
 
     // Hashing the password
     this.password = await bcrypt.hash(this.password, 12);
-
     //Remove field
     this.passwordConfirm = undefined;
     next();

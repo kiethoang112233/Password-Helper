@@ -16,7 +16,7 @@ const { successAuthRes } = require("../models/responseModels/successResponse");
 const createToken = (userId, userName) => {
     return jwt.sign(
         { id: userId, userName },
-        process.env.JWT_STRING,
+        process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRES_IN },
     );
 };
@@ -83,8 +83,6 @@ exports.signup = async (req, res, next) => {
             userName,
             fullName,
             email,
-            description,
-            gender,
             password,
             passwordConfirm
         } = req.body;
@@ -94,12 +92,9 @@ exports.signup = async (req, res, next) => {
             userName: userName,
             fullName: fullName,
             email: email,
-            description: description,
-            gender: gender,
             password: password,
             passwordConfirm: passwordConfirm,
         });
-
 
         if (!user) {
             return next(new AppError(404, errorDescription.unableCreate, errorMessage.unableCreate), req, res, next);
