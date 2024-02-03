@@ -21,7 +21,7 @@ exports.generateStrongPassword = (length) => {
     return password;
 }
 
-exports.checkPasswordLeaked = async (password) => {
+exports.checkPasswordLeak = async (password) => {
     const sha1Hash = await getSHA1Hash(password);
     const prefix = sha1Hash.substring(0, 5);
     const suffix = sha1Hash.substring(5);

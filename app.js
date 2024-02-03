@@ -1,62 +1,48 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { generateStrongPassword, checkPasswordLeaked } = require('./passwordHelper');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const hpp = require('hpp');
+const cors = require('cors');
 
+const appRoutes = require('./routes/index');
+const globalErrHandler = require('./models/responseModels/errorResponse');
+const AppError = require('./utils/appError');
 const app = express();
-const port = 3000;
+const { errorDescription, errorMessage } = require('./utils/const');
 
-app.get('/', async (req, res) => {
-    res.send("Welcome to Password Helper!")
+app.use(cors());        //Allow cross-origin reqs
+
+app.use(helmet());      // Set security HTTP headers
+
+/* Limit request from the same API */
+const limiter = rateLimit({
+    max: 150,
+    windowMs: 60 * 60 * 1000,
+    message: 'Number of Requests from your IP have reached the limit !'
 });
 
-// Middleware to parse JSON requests
-app.use(bodyParser.json());
+app.use('*', limiter);           //Apply traffic-limiter Middleware
 
-// Endpoint to check if a password has been leaked
-app.post('/check-password-leak', async (req, res) => {
-    try {
-        const { password } = req.body;
-        if (!password) {
-            return res.status(400).json({ error: 'Password is required.' });
-        }
+/* Parse Body of Requests to JSON format */
+app.use(express.json({
+    limit: '15kb'
+}));
 
-        const leakedCount = await checkPasswordLeaked(password);
-        if (leakedCount > 0) {
-            return res.status(200).json({ message: `The password has been leaked ${leakedCount} times. Consider choosing a different one.` });
-        } else if (leakedCount === 0) {
-            return res.status(200).json({ message: 'The password has not been leaked. It appears to be safe.' });
-        } else {
-            return res.status(500).json({ error: 'Error checking the password.' });
-        }
+app.use(mongoSanitize());   // Data sanitization against Nosql query injection
 
-    } catch (error) {
-        console.error('Error:', error);
-        return res.status(500).json({ error: 'Internal server error.' });
-    }
+app.use(hpp());             // Prevent parameter pollution
+
+// Routes
+app.use('/api', appRoutes);
+
+/* Handle Undefined Routes */
+app.use('*', (req, res, next) => {
+    const err = new AppError(404, errorDescription.undefinedRoute, errorMessage.undefinedRoute);
+    next(err, req, res, next);
 });
 
-app.post('/generate-password', async (req, res) => {
-    try {
-        const { length } = req.body;
-        if (!length) {
-            return res.status(400).json({ error: 'Length is required.' });
-        }
+/* Error Handler */
+app.use(globalErrHandler);
 
-        let password, leakedCount;
-        do {
-            password = generateStrongPassword(length);
-            leakedCount = await checkPasswordLeaked(password);
-        } while (leakedCount !== 0)
-
-        return res.status(200).json({ password: password });
-
-    } catch (error) {
-        console.error('Error:', error);
-        return res.status(500).json({ error: 'Internal server error.' });
-    }
-});
-
-
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
-});
+module.exports = app;
