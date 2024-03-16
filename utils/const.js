@@ -58,12 +58,12 @@ successMessage.userUpdated = "User has been updated!";
 successMessage.userFound = "Found User!";
 
 
-//Board constants
-successMessage.boardListFound = "Successfully found your Board list";
-successMessage.boardFound = "Found your Board!";
-successMessage.boardCreated = "New Board has been created!";
-successMessage.boardUpdated = "Existing Board has been updated!";
-successMessage.boardDeleted = "Your Board has been deleted!";
+//Credential constants
+successMessage.credentialListFound = "Successfully found your Credential list";
+successMessage.credentialFound = "Found your Credential!";
+successMessage.credentialCreated = "New Credential has been created!";
+successMessage.credentialUpdated = "Existing Credential has been updated!";
+successMessage.credentialDeleted = "Your Credential has been deleted!";
 
 //Task constants
 successMessage.taskListFound = "Successfully found your Task list";

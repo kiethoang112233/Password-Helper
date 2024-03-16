@@ -48,7 +48,6 @@ const userSchema = new mongoose.Schema({
     { timestamps: true }
 );
 
-
 /**
  * Encrypt password before saving to Database
  */
@@ -83,5 +82,4 @@ userSchema.methods.validatePassword = async function (
 
 
 const User = mongoose.model("User", userSchema);
-
 module.exports = User;
