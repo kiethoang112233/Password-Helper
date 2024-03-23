@@ -1,24 +1,21 @@
 const axios = require('axios');
 const crypto = require('crypto');
+const passwordGenerator = require('generate-password');
 
 
 exports.generateStrongPassword = (length) => {
-    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
-    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const numericChars = '0123456789';
-    const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    // Define password requirements based on OWASP guidelines
+    const passwordOptions = {
+        length: Math.max(length, 12),            // Password length (at least 12)
+        numbers: true,                      // Include numeric characters
+        uppercase: true,                    // Include uppercase letters
+        lowercase: true,                    // Include lowercase letters
+        symbols: true,                      // Include special symbols
+        excludeSimilarCharacters: true,     // Exclude similar characters (e.g., 'l' and '1')
+        strict: true                        // Ensure password meets all requirements
+    };
 
-    const allChars = lowercaseChars + uppercaseChars + numericChars + specialChars;
-
-    let password = '';
-
-    // Generate a password with the specified length
-    while (password.length < length) {
-        const randomIndex = Math.floor(Math.random() * allChars.length);
-        password += allChars[randomIndex];
-    }
-
-    return password;
+    return passwordGenerator.generate(passwordOptions);
 }
 
 exports.checkPasswordLeak = async (password) => {

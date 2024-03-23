@@ -1,5 +1,5 @@
 const Credential = require('../models/credentialModel');
-const { successRes } = require('./response-models/successResponse');
+const { successRes } = require('../models/responseModels/successResponse');
 const AppError = require("../utils/appError");
 const { errorDescription, errorMessage, successMessage } = require('../utils/const');
 

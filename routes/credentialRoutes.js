@@ -7,10 +7,10 @@ const { getCredential, getCredentials, updateCredential, createCredential, delet
  * Routes handling Board related operations
  */
 
-boardRouter.get('/', getCredentials);
-boardRouter.get('/:id', getCredential);
-boardRouter.post('/create', createCredential);
-boardRouter.patch('/:id', updateCredential);
-boardRouter.delete('/:id', deleteCredential);
+credentialRouter.get('/', getCredentials);
+credentialRouter.get('/:id', getCredential);
+credentialRouter.post('/create', createCredential);
+credentialRouter.patch('/:id', updateCredential);
+credentialRouter.delete('/:id', deleteCredential);
 
 module.exports = credentialRouter;
