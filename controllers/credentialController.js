@@ -2,13 +2,14 @@ const Credential = require('../models/credentialModel');
 const { successRes } = require('../models/responseModels/successResponse');
 const AppError = require("../utils/appError");
 const { errorDescription, errorMessage, successMessage } = require('../utils/const');
+const Cryptr = require('cryptr');
 
 /**
  *  Delete A Credential
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
  */
 exports.deleteCredential = async (req, res, next) => {
     try {
@@ -29,10 +30,10 @@ exports.deleteCredential = async (req, res, next) => {
 
 /**
  *  Update Credential info
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
  */
 exports.updateCredential = async (req, res, next) => {
     try {
@@ -57,19 +58,24 @@ exports.updateCredential = async (req, res, next) => {
 
 /**
  *  Create a new Credential
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
  */
 exports.createCredential = async (req, res, next) => {
     try {
-        //Creating Credential
+
+        // encrypt password using secret key
+        const cryptr = new Cryptr(req.body.secretKey);
+        const encryptedPassword = cryptr.encrypt(req.body.password);
+
+        //Creating Credential + save only the encrypted password to DB
         const createCredential = await Credential.create({
             userId: req.user.id,
             platform: req.body.platform,
             username: req.body.username,
-            password: req.body.password
+            password: encryptedPassword,
         });
 
         if (!createCredential) {
@@ -87,10 +93,10 @@ exports.createCredential = async (req, res, next) => {
 
 /**
  *  Get a Credential specified by Id
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
  */
 exports.getCredential = async (req, res, next) => {
     try {
@@ -120,10 +126,10 @@ exports.getCredential = async (req, res, next) => {
 
 /**
  *  Get List of Credentials
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
  */
 exports.getCredentials = async (req, res, next) => {
     try {

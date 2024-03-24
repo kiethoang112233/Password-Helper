@@ -20,6 +20,7 @@ errorDescription.unableUpdate = "Unable to Update";
 errorDescription.missingLength = "Missing password length";
 errorDescription.checkPasswordFail = "Unable to check password";
 errorDescription.passwordDecryptionError = "Unable to decrypt password";
+errorDescription.passwordEncryptionError = "Unable to encrypt password";
 
 /**
  * Description for Errors
@@ -44,7 +45,7 @@ errorMessage.unableUpdate = "Unable to update this time. Please try again!";
 errorMessage.missingLength = "Please provide password length";
 errorMessage.checkPasswordFail = "Unable to check password. Please try again later."
 errorMessage.passwordDecryptionError = "Unable to decrypt password. Please check the key";
-
+errorMessage.passwordEncryptionError = "Unable to encrypt password. Please check the key";
 
 /**
  *  Collection of Success Messages

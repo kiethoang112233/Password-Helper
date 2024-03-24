@@ -4,6 +4,36 @@ const passwordHelper = require("../utils/passwordHelper");
 const Cryptr = require('cryptr');
 
 /**
+ *  Encrypt password
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
+ */
+exports.encryptPassword = async (req, res, next) => {
+    try {
+        const { secretKey, password } = req.body;
+        if (!secretKey || !password) {
+            return next(new AppError(401, errorDescription.missingLength, errorMessage.missingLength), req, res, next);
+        }
+
+        const cryptr = new Cryptr(secretKey);
+
+        try {
+            const encrypted = cryptr.encrypt(password);
+
+            return res.status(200).json({ encryptedPassword: encrypted });
+        } catch (error) {
+            next(new AppError(500, errorDescription.passwordEncryptionError, errorMessage.passwordEncryptionError), req, res, next)
+        }
+
+    } catch (err) {
+        next(new AppError(500, errorDescription.internalServerError, errorMessage.internalServerError), req, res, next);
+    }
+};
+
+/**
  *  Decrypt password
  *
  * @param {*} req
@@ -13,8 +43,8 @@ const Cryptr = require('cryptr');
  */
 exports.decryptPassword = async (req, res, next) => {
     try {
-        const { key, encryptedPassword } = req.body;
-        if (!key || !password) {
+        const { secretKey, encryptedPassword } = req.body;
+        if (!secretKey || !encryptedPassword) {
             return next(new AppError(401, errorDescription.missingLength, errorMessage.missingLength), req, res, next);
         }
 
