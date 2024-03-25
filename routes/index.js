@@ -7,7 +7,7 @@ const credentialRouter = require('./credentialRoutes.js');
 const requireAuth = require('../middlewares/requireAuth');
 
 //Requires JWT to access these APIs
-router.use(['/credential'], requireAuth);
+router.use(['/credential', '/password'], requireAuth);
 
 router.use('/auth', authRouter);
 router.use('/password', passwordRouter);

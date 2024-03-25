@@ -83,7 +83,7 @@ exports.generatePassword = async (req, res, next) => {
             password = passwordHelper.generateStrongPassword(length);
             leakedCount = await passwordHelper.checkPasswordLeak(password);
         } while (leakedCount !== 0)
-        return res.status(200).json({ password: password });
+        return res.status(200).json({ password });
 
     } catch (err) {
         next(new AppError(500, errorDescription.internalServerError, errorMessage.internalServerError), req, res, next);
@@ -105,14 +105,8 @@ exports.checkPasswordLeak = async (req, res, next) => {
             return next(new AppError(401, errorDescription.missingLength, errorMessage.missingLength), req, res, next);
         }
 
-        const leakedCount = await passwordHelper.checkPasswordLeak(password);
-        if (leakedCount > 0) {
-            return res.status(200).json({ message: `The password has been leaked ${leakedCount} times. Consider choosing a different one.` });
-        } else if (leakedCount === 0) {
-            return res.status(200).json({ message: 'The password has not been leaked. It appears to be safe.' });
-        } else {
-            return next(new AppError(500, errorDescription.checkPasswordFail, errorMessage.checkPasswordFail), req, res, next);
-        }
+        const leakCount = await passwordHelper.checkPasswordLeak(password);
+        return res.status(200).json({ leakCount });
 
     } catch (error) {
         next(new AppError(500, errorDescription.internalServerError, errorMessage.internalServerError), req, res, next);

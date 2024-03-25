@@ -14,11 +14,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please fill your full name"],
         trim: true,
-        validate: {
-            validator: function (inputName) {
-                return /[^a-zA-Z]/.test(inputName);
-            }
-        }
     },
     email: {
         type: String,

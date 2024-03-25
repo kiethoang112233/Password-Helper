@@ -9,8 +9,6 @@ dotenv.config({
     path: './config.env'
 });
 
-//Signing str from .env file
-const signingString = process.env.JWT_STRING
 
 /**
  *  Middleware Checking for Authentication Status
@@ -30,13 +28,15 @@ let requireAuth = (req, res, next) => {
     }
 
     //Retrieve token
-    const retrievedToken = authorization.replace('Bearer', '');
+    const retrievedToken = authorization.replace('Bearer', '').trim();
 
     //Validate token
-    jwt.verify(retrievedToken, signingString, async (error, payload) => {
+    jwt.verify(retrievedToken, process.env.JWT_SECRET, async (error, payload) => {
         //Invalid token
-        if (error)
+        if (error) {
             return next(new AppError(404, errorDescription.notAuthenticated, errorMessage.notAuthenticated), req, res, next);
+        }
+
 
         //Get data by decryped token
         const { id } = payload;

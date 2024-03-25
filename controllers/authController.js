@@ -36,7 +36,7 @@ exports.login = async (req, res, next) => {
 
         // Check user name and password availability
         if (!userName || !password) {
-            return next(new AppError(404, errorDescription.missingCredentials, errorMessage.missingCredentials), req, res, next);
+            return next(new AppError(400, errorDescription.missingCredentials, errorMessage.missingCredentials), req, res, next);
         }
 
         //Check existence user name
@@ -54,7 +54,7 @@ exports.login = async (req, res, next) => {
         }
 
         //Generate JWT token
-        const token = createToken(user.id, user.user_name);
+        const token = createToken(user.id, user.userName);
 
         //Successfully authenticated, returns JWT Token to user
         return res
@@ -87,6 +87,8 @@ exports.signup = async (req, res, next) => {
             passwordConfirm
         } = req.body;
 
+        console.log(userName, fullName, email, password, passwordConfirm);
+
         //Create new User
         const user = await User.create({
             userName: userName,
@@ -101,7 +103,7 @@ exports.signup = async (req, res, next) => {
         }
 
         //Generate token
-        const token = createToken(user.id, user.full_name);
+        const token = createToken(user.id, user.userName);
 
         //Successfully authenticated, returns JWT Token to user
         return res
@@ -110,6 +112,6 @@ exports.signup = async (req, res, next) => {
 
     } catch (err) {
         //next(err);  //Debugging
-        next(new AppError(404, errorDescription.unableCreate, errorMessage.unableCreate), req, res, next);
+        next(new AppError(500, errorDescription.unableCreate, errorMessage.unableCreate), req, res, next);
     }
 };
