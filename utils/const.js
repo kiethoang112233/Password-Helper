@@ -74,6 +74,9 @@ successMessage.taskCreated = "New task has been created!";
 successMessage.taskUpdated = "Existing Task has been updated!";
 successMessage.taskDeleted = "Your Task has been deleted!";
 
+successMessage.passwordDecryption = "Password has been successfully decrypted";
+successMessage.passwordEncryption = "Password has been successfully encrypted";
+
 
 module.exports = {
     errorMessage,

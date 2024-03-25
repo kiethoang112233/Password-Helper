@@ -1,5 +1,6 @@
 const AppError = require("../utils/appError");
-const { errorDescription, errorMessage } = require("../utils/const");
+const { errorDescription, errorMessage, passwordDecryption, passwordEncryption } = require("../utils/const");
+const { successRes } = require('../models/responseModels/successResponse');
 const passwordHelper = require("../utils/passwordHelper");
 const Cryptr = require('cryptr');
 
@@ -23,7 +24,9 @@ exports.encryptPassword = async (req, res, next) => {
         try {
             const encrypted = cryptr.encrypt(password);
 
-            return res.status(200).json({ encryptedPassword: encrypted });
+            return res
+                .status(200)
+                .json(successRes(passwordEncryption, 200, { encryptedPassword: encrypted }));
         } catch (error) {
             next(new AppError(500, errorDescription.passwordEncryptionError, errorMessage.passwordEncryptionError), req, res, next)
         }
@@ -48,12 +51,14 @@ exports.decryptPassword = async (req, res, next) => {
             return next(new AppError(401, errorDescription.missingLength, errorMessage.missingLength), req, res, next);
         }
 
-        const cryptr = new Cryptr(secretKey);
+        const cryptr = new Cryptr(secretKey.trim());
 
         try {
             const decrypted = cryptr.decrypt(encryptedPassword);
 
-            return res.status(200).json({ decryptedPassword: decrypted });
+            return res
+                .status(200)
+                .json(successRes(passwordDecryption, 200, { decryptedPassword: decrypted }));
         } catch (error) {
             next(new AppError(500, errorDescription.passwordDecryptionError, errorMessage.passwordDecryptionError), req, res, next)
         }

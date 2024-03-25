@@ -67,7 +67,9 @@ exports.createCredential = async (req, res, next) => {
     try {
 
         // encrypt password using secret key
-        const cryptr = new Cryptr(req.body.secretKey);
+        let secretKey = req.body.secretKey.trim();
+
+        const cryptr = new Cryptr(secretKey);
         const encryptedPassword = cryptr.encrypt(req.body.password);
 
         //Creating Credential + save only the encrypted password to DB
@@ -113,8 +115,8 @@ exports.getCredential = async (req, res, next) => {
             .json(successRes(successMessage.credentialFound, 200, {
                 id: searchCredential.id,
                 platform: searchCredential.platform,
-                username: searchCredential.description,
-                password: searchCredential.password,  // TODO: decrypt password with user's key
+                username: searchCredential.username,
+                password: searchCredential.password,
                 createdAt: searchCredential.createdAt,
                 updatedAt: searchCredential.updatedAt
             }));

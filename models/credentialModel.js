@@ -24,16 +24,5 @@ const credentialSchema = new mongoose.Schema({
     }
 });
 
-/**
- * Encrypt password before saving to Database
- */
-credentialSchema.pre("save", async function (next) {
-    // Hashing the password
-    this.password = await bcrypt.hash(this.password, 12);
-    next();
-
-});
-
-
 const Credential = mongoose.model("Credential", credentialSchema);
 module.exports = Credential;
