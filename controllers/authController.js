@@ -8,10 +8,10 @@ const { successAuthRes } = require("../models/responseModels/successResponse");
  *  Generate an encrypted JWT Token nested with:
  *  - User ID
  *  - User name
- * 
- * @param {*} userId 
- * @param {*} userName 
- * @returns 
+ *
+ * @param {*} userId
+ * @param {*} userName
+ * @returns
  */
 const createToken = (userId, userName) => {
     return jwt.sign(
@@ -24,11 +24,11 @@ const createToken = (userId, userName) => {
 
 /**
  *  Authenticate & Login to an account
- *  
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
  */
 exports.login = async (req, res, next) => {
     try {
@@ -69,11 +69,11 @@ exports.login = async (req, res, next) => {
 
 /**
  * Sign up new User (CREATE user)
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
+ *
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @returns
  */
 exports.signup = async (req, res, next) => {
     try {
@@ -86,8 +86,6 @@ exports.signup = async (req, res, next) => {
             password,
             passwordConfirm
         } = req.body;
-
-        console.log(userName, fullName, email, password, passwordConfirm);
 
         //Create new User
         const user = await User.create({
