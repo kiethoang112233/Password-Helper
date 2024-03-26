@@ -66,18 +66,18 @@ exports.updateCredential = async (req, res, next) => {
 exports.createCredential = async (req, res, next) => {
     try {
 
-        // encrypt password using secret key
+        // encrypt plaintext password using secret key
         let secretKey = req.body.secretKey.trim();
 
         const cryptr = new Cryptr(secretKey);
         const encryptedPassword = cryptr.encrypt(req.body.password);
 
-        //Creating Credential + save only the encrypted password to DB
+        // Creating Credential + save only the encrypted password to DB
         const createCredential = await Credential.create({
             userId: req.user.id,
             platform: req.body.platform,
             username: req.body.username,
-            password: encryptedPassword,
+            password: encryptedPassword,        // encrypted password
         });
 
         if (!createCredential) {
