@@ -34,6 +34,10 @@ app.use(mongoSanitize());   // Data sanitization against Nosql query injection
 app.use(hpp());             // Prevent parameter pollution
 
 // Routes
+app.use('/health', (req, res) => {
+    res.status(200).send('Server is up and running!');
+});
+
 app.use('/api', appRoutes);
 
 /* Handle Undefined Routes */
